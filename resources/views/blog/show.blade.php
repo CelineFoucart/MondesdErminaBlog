@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="pageTitle">{{ $blogPost->title }}</x-slot>
     <x-slot name="headerBlog">{{ $blogPost->title }}</x-slot>
     <div class="grid grid-cols-4 gap-4 mt-10">
         <article class="border rounded p-5 bg-white mb-2 col-span-3">

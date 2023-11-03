@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="pageTitle">Actualités</x-slot>
     <x-slot name="headerBlog">Mes actualités</x-slot>
     <article class="grid grid-cols-4 gap-4 mt-10">
         <div class="col-span-3">

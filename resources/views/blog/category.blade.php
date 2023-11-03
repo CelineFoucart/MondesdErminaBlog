@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="pageTitle">{{ $category->title }}</x-slot>
     <x-slot name="headerBlog">{{ $category->title }}</x-slot>
     <p class="text-center">
         {{ $category->description }}
