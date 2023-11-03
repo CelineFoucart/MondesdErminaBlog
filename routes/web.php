@@ -20,7 +20,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blogPost:slug}', [BlogController::class, 'show'])->where(['blogPost' => '[a-z0-9\-]+'])->name('blog.show');
-Route::get('/category/{category:slug}', [BlogController::class, 'show'])->where(['category' => '[a-z0-9\-]+'])->name('blog.category');
+Route::get('/category/{category:slug}', [BlogController::class, 'category'])->where(['category' => '[a-z0-9\-]+'])->name('blog.category');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

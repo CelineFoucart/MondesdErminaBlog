@@ -2,17 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchRequest;
 use App\Models\BlogPost;
 use App\Models\Category;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use App\Http\Requests\SearchRequest;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BlogController extends Controller
 {
     public function index(SearchRequest $searchRequest): View
     {
-        $query = BlogPost::query();
+        return view('blog.index', [
+            'blogPosts' => $this->getBlogPostPaginated($searchRequest)
+        ]);
+    }
+
+    public function show(BlogPost $blogPost): View
+    {
+        return view('blog.show', [
+            'blogPost' => $blogPost,
+        ]);
+    }
+
+    public function category(SearchRequest $searchRequest, Category $category): View
+    {        
+        return view('blog.category', [
+            'blogPosts' => $this->getBlogPostPaginated($searchRequest, $category),
+            'category' => $category,
+        ]);
+    }
+
+    private function getBlogPostPaginated(SearchRequest $searchRequest, ?Category $category = null): LengthAwarePaginator
+    {
+        $categoryId = ($category !== null) ? $category->id : null;
+
+        $query = BlogPost::query()->with('categories', function($query)  use ($categoryId) {
+            if ($categoryId !== null) {
+                $query->where('category_id', $categoryId);
+            }
+        });
 
         if ($searchRequest->validated('title')) {
             $query = $query->where('title', 'like', "%{$searchRequest->validated('title')}%");
@@ -24,21 +54,6 @@ class BlogController extends Controller
             $perPage = Controller::PER_PAGE;
         }
 
-        return view('blog.index', [
-            'blogPosts' => $query->recent()->paginate($perPage),
-            'input' => $searchRequest->validated(),
-            'perPageOptions' => [Controller::PER_PAGE, 20, 50, 70, 90],
-            'categories' => Category::orderBy('title')->get(),
-        ]);
-    }
-
-    public function show(BlogPost $blogPost): View
-    {
-        return view('blog.show');
-    }
-
-    public function category(Category $category): View
-    {
-        return view('blog.category');
+        return $query->recent()->paginate($perPage);
     }
 }
