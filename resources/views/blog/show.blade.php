@@ -16,23 +16,7 @@
                 {{ nl2br($blogPost->content) }}
             </div>
 
-            <section class="border-t pt-6">
-                <h3 class="text-2xl">
-                    @php $total = $blogPost->comments !== null ? $blogPost->comments->count() : 0; @endphp
-                    {{ $total }} Commentaire{{ $total > 1 ? 's' : '' }}
-                </h3>
-
-                @if ($total === 0)
-                    <p class="text-center text-gray-500">Aucun commentaire n'a été publié sur cet article.</p>
-                @endif
-
-                @guest
-                    <p>
-                        Pour poster un commentaire, <a href="{{ route('login') }}">connectez-vous</a>
-                        ou <a href="{ route('register') }}">inscrivez-vous</a>.
-                    </p>
-                @endguest
-            </section>
+            <div id="app" data-post="{{ $blogPost->id }}"></div>
         </article>
         <x-search-post />
     </div>

@@ -38,6 +38,13 @@
                     </div>
                 </header>
             @endif
+            @if (isset($headerAdmin))
+                <header class="lg:container mx-auto py-6">
+                    <h1 class="text-4xl text-gray-800 leading-tight">
+                        {{ $headerAdmin }}
+                    </h1>
+                </header>
+            @endif
 
             <!-- Page Content -->
             <main class="lg:container mx-auto">

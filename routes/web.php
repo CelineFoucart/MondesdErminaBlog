@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Middleware\AdminRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +32,21 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/api/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::prefix('/api/blog')->group(function() {
+    Route::get('/{blogPost}/comments', [CommentController::class, 'index'])->name('comments.list');
+    Route::post('/{blogPost}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+});
+
+Route::prefix('/admin')->name('admin.')->group(function() {
+    Route::get('', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comment.index');
+})->middleware(AdminRole::class);
 
 require __DIR__.'/auth.php';

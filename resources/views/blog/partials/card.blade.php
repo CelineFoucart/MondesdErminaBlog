@@ -2,7 +2,7 @@
     <header class="mb-5">
         @include('blog.partials.post-info')
         <h3 class="font-bold text-2xl mb-2 text-gray-900 hover:text-gray-600">
-            <a href="{{ route('blog.show', $blogPost) }}">{{ $blogPost->title }}</a>
+            <a href="{{ route('blog.show', $blogPost) }}" class="text-inherit">{{ $blogPost->title }}</a>
         </h3>
         <p class="text-gray-700 text-base">{{ nl2br($blogPost->description) }}</p>
     </header>

@@ -19,6 +19,8 @@
                     <x-nav-link :href="route('home.about')" :active="request()->routeIs('home.about')">
                         A propos de moi
                     </x-nav-link>
+
+                    @include('layouts.admin-dropdown')
                 </div>
             </div>
 
@@ -91,6 +93,14 @@
             <x-responsive-nav-link :href="route('home.about')" :active="request()->routeIs('home.about')">
                 A propos de moi
             </x-responsive-nav-link>
+
+            @auth
+                @if (Auth::user()->role === 'admin')
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        Administration
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->

@@ -32,6 +32,11 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'content',
+        'is_validated',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
