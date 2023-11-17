@@ -23,7 +23,7 @@ class CommentController extends Controller
     {
         $offset = $request->query('offset', 0);
         $limit = $request->query('limit', self::LIMIT);
-        $total = Comment::query()->where('blog_post_id', '=', $blogPost->id)->count();
+        $total = Comment::query()->where('blog_post_id', '=', $blogPost->id)->where('is_validated', '=', true)->count();
 
         return CommentResource::collection(
             Comment::with('user')
@@ -31,8 +31,9 @@ class CommentController extends Controller
             ->offset($offset)
             ->orderBy('created_at', 'desc')
             ->where('blog_post_id', '=', $blogPost->id)
+            ->where('is_validated', '=', true)
             ->get()
-        )->additional(['meta' => ['limit' => $limit, 'offset' => $offset, 'total' => $total]]);
+        )->additional(['meta' => ['limit' => $limit, 'offset' => (int) $offset, 'total' => $total]]);
     }
 
     /**
@@ -41,7 +42,7 @@ class CommentController extends Controller
     public function store(BlogPost $blogPost, CommentRequest $request): CommentResource
     {        
         $comment = new Comment([
-            'is_validated' => true,
+            'is_validated' => false,
             'content' => $request->validated()['content'],
         ]);
         $comment->blog_post_id = $blogPost->id;

@@ -4,7 +4,7 @@
             <header class="mb-3">
                 <h3 class="text-3xl">{{ commentStats.total }} commentaire{{ commentStats.total > 1 ? 's' : '' }}</h3>
             </header>
-            <div v-if="postId !== null && loading === false">
+            <div v-if="postId !== null">
                 <CommentForm :postId="postId"></CommentForm>
                 <CommentContainer :postId="postId"></CommentContainer>
             </div>
@@ -40,7 +40,7 @@
         },
 
         computed: {
-            ...mapState(useCommentStore, ['commentStats'])
+            ...mapState(useCommentStore, ['commentStats', 'comments'])
         },
 
         async mounted () {
@@ -48,10 +48,31 @@
             await this.getUser();
             await this.getComments(this.postId);
             this.loading = false;
+            window.addEventListener('scroll', this.loadMore, { passive: true });
+        },
+
+        unmounted() {
+            window.removeEventListener('scroll', this.handleScroll);
         },
 
         methods: {
             ...mapActions(useCommentStore, ['getComments', 'getUser']),
+
+            async loadMore() {
+                const {
+                    scrollTop,
+                    scrollHeight,
+                    clientHeight
+                } = document.documentElement;
+
+                if (scrollTop + clientHeight >= scrollHeight - 5 && this.comments.length < this.commentStats.total) {
+                    this.loading = true;
+                    const offset = parseInt(this.commentStats.offset) + parseInt(this.commentStats.limit);
+                    await this.getComments(this.postId, offset);
+                    this.loading = false;
+                }
+                
+            }
         },
     }
 </script>

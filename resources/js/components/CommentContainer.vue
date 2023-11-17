@@ -17,10 +17,6 @@
             </button>
         </Modal>
     </div>
-
-    <!--
-    
-    -->
 </template>
 
 <script>
@@ -29,7 +25,6 @@
     import CommentCard from '@/components/CommentCard.vue';
     import Modal from '../Utility/Modal.vue';
     import CommentForm from '@/components/CommentForm.vue';
-    
 
     export default {
         name: 'CommentContainer',

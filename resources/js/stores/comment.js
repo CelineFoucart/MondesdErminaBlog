@@ -1,4 +1,3 @@
-import generate from '../helpers/routing';
 import { defineStore } from 'pinia';
 
 export const useCommentStore = defineStore('comments', {
@@ -9,13 +8,13 @@ export const useCommentStore = defineStore('comments', {
     }),
 
     actions: {
-        async getComments(postId) {
+        async getComments(postId, offset = 0) {
             try {
-                const route = generate('commentIndex', {postId: postId, limit: this.commentStats.limit, offset: this.commentStats.offset});
+                const route = `/api/blog/${postId}/comments?limit=${this.commentStats.limit}&offset=${offset}`;
                 const response = await window.axios.get(route);
 
                 if (response.status === 200) {
-                    this.comments = [...response.data.data];
+                    this.comments = [...JSON.parse(JSON.stringify(this.comments)), ...response.data.data];
                     this.commentStats = response.data.meta;
                 }
                 return true;
@@ -37,8 +36,7 @@ export const useCommentStore = defineStore('comments', {
 
         async postComment(data, postId) {
             try {
-                const route = generate('commentStore', {postId: postId});
-                const response = await window.axios.post(route, data);
+                const response = await window.axios.post(`/api/blog/${postId}/comments`, data);
                 const comment = response.data.data;
 
                 if (comment.is_validated === true) {
@@ -54,8 +52,7 @@ export const useCommentStore = defineStore('comments', {
 
         async putComment(data, commentId) {
             try {
-                const route = generate('commentEdit', {commentId: commentId});
-                const response = await window.axios.put(route, data);
+                const response = await window.axios.put(`/api/blog/comments/${commentId}`, data);
                 const index = this.comments.findIndex(element => element.id === commentId);
                 if (index !== -1) {
                     this.comments[index] = response.data.data;
@@ -69,8 +66,7 @@ export const useCommentStore = defineStore('comments', {
 
         async deleteComment(commentId) {
             try {
-                const route = generate('commentDelete', {commentId: commentId});
-                await window.axios.delete(route);
+                await window.axios.delete(`/api/blog/comments/${commentId}`);
                 const comments = this.comments.filter(element => element.id !== commentId);
                 this.comments = comments;
 
