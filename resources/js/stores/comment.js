@@ -5,7 +5,7 @@ export const useCommentStore = defineStore('comments', {
     state: () => ({ 
         comments: [],
         commentStats: { limit: 10, offset: 0, total: 0 },
-        user: null
+        user: null,
     }),
 
     actions: {
@@ -18,7 +18,6 @@ export const useCommentStore = defineStore('comments', {
                     this.comments = [...response.data.data];
                     this.commentStats = response.data.meta;
                 }
-
                 return true;
             } catch (error) {
                 return false;

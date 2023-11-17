@@ -19,9 +19,7 @@
     </div>
 
     <!--
-    <div class="fixed left-0 top-0 z-999999 flex h-screen w-screen items-center justify-center bg-white">
-            <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-        </div>
+    
     -->
 </template>
 
@@ -31,6 +29,7 @@
     import CommentCard from '@/components/CommentCard.vue';
     import Modal from '../Utility/Modal.vue';
     import CommentForm from '@/components/CommentForm.vue';
+    
 
     export default {
         name: 'CommentContainer',
@@ -60,12 +59,8 @@
             ...mapState(useCommentStore, ['commentStats'])
         },
 
-        async mounted () {
-            await this.getComments(this.postId);
-        },
-
         methods: {
-            ...mapActions(useCommentStore, ['getComments', "deleteComment"]),
+            ...mapActions(useCommentStore, ["deleteComment"]),
 
             onEditAction(payload) {
                 this.enableEdit = true;
