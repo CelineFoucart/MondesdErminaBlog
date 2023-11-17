@@ -23,7 +23,7 @@ class CommentResource extends JsonResource
             'is_validated' => (bool) $this->is_validated,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserResource($this->user),
             '_links' => [
                 'delete' => route('comments.update', $this->resource),
                 'edit' => route('comments.destroy', $this->resource)

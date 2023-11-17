@@ -28,7 +28,54 @@ export const useCommentStore = defineStore('comments', {
         async getUser() {
             try {
                 const response = await window.axios.get('/api/user');
-                this.user = response.data;
+                if (response.data !== "") {
+                    this.user = response.data;
+                }
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async postComment(data, postId) {
+            try {
+                const route = generate('commentStore', {postId: postId});
+                const response = await window.axios.post(route, data);
+                const comment = response.data.data;
+
+                if (comment.is_validated === true) {
+                    this.comments.push(comment);
+                    this.commentStats.total += 1
+                }
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async putComment(data, commentId) {
+            try {
+                const route = generate('commentEdit', {commentId: commentId});
+                const response = await window.axios.put(route, data);
+                const index = this.comments.findIndex(element => element.id === commentId);
+                if (index !== -1) {
+                    this.comments[index] = response.data.data;
+                }
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async deleteComment(commentId) {
+            try {
+                const route = generate('commentDelete', {commentId: commentId});
+                await window.axios.delete(route);
+                const comments = this.comments.filter(element => element.id !== commentId);
+                this.comments = comments;
+
+                return true;
             } catch (error) {
                 return false;
             }

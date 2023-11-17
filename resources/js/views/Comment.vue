@@ -39,7 +39,7 @@
         },
 
         methods: {
-            ...mapActions(useCommentStore, ['getUser'])
+            ...mapActions(useCommentStore, ['getUser']),
         },
     }
 </script>

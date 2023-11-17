@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Comment;
-use App\Models\BlogPost;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
+use App\Models\BlogPost;
+use App\Models\Comment;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class CommentController extends Controller
 {
@@ -35,26 +38,55 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BlogPost $blogPost, Request $request)
-    {
-        //
+    public function store(BlogPost $blogPost, CommentRequest $request): CommentResource
+    {        
+        $comment = new Comment([
+            'is_validated' => true,
+            'content' => $request->validated()['content'],
+        ]);
+        $comment->blog_post_id = $blogPost->id;
+        $comment->user_id = $request->user()->id;
+        $comment->save();
 
-        // return new CommentResource($comment);
+        return new CommentResource($comment);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(CommentRequest $request, Comment $comment): CommentResource
     {
+        $this->canAccess($comment);
+        $comment->update($request->validated());
+
         return new CommentResource($comment);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): ?bool
     {
-        //
+        $this->canAccess($comment);
+
+        try {
+            return $comment->delete();
+        } catch (\LogicException $th) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if the user is the author.
+     *
+     * @throws HttpResponseException
+     */
+    private function canAccess(Comment $comment): void
+    {
+        $currentUser = auth()->user();
+
+        if ($currentUser->id !== $comment->user->id) {
+            abort(Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

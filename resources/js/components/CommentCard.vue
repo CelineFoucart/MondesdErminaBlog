@@ -3,10 +3,10 @@
         <h4 class="text-gray-900 dark:text-white font-semibold">{{ comment.user.name }}</h4>
         <p>
             <span class="text-sm text-gray-600 pr-2"><time datetime="2022-02-08">{{ formatDatetime(comment.created_at) }}</time></span>
-            <button type="button" class="text-green-700 hover:text-green-800 mr-1">
+            <button type="button" class="text-green-700 hover:text-green-800 mr-1" @click="onEditAction" v-if="comment.user.id === user.id">
                 <i class="bi bi-pencil-fill"></i> <span class="sr-only">Editer</span> 
             </button>
-            <button type="button" class="text-red-700 hover:text-red-800">
+            <button type="button" class="text-red-700 hover:text-red-800" @click="onDeleteAction" v-if="comment.user.id === user.id">
                 <i class="bi bi-trash-fill"></i> <span class="sr-only">Supprimer</span>
             </button>
         </p>
@@ -35,6 +35,14 @@
         methods: {
             formatDatetime(datetime) {
                 return dayjs(datetime).format('DD MMMM YYYY, HH:mm')
+            },
+
+            onEditAction() {
+                this.$emit('on-edit', this.comment);
+            },
+            
+            onDeleteAction() {
+                this.$emit('on-delete', this.comment);
             }
         },
     }
