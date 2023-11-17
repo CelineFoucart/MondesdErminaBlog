@@ -47,6 +47,10 @@ Route::prefix('/api/blog')->group(function() {
 Route::prefix('/admin')->name('admin.')->group(function() {
     Route::get('', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/comments', [AdminCommentController::class, 'index'])->name('comment.index');
+    Route::get('/comments/{comment}', [AdminCommentController::class, 'edit'])->name('comment.edit');
+    Route::put('/comments/{comment}', [AdminCommentController::class, 'update'])->name('comment.update');
+    Route::get('/comments/{comment}/delete', [AdminCommentController::class, 'delete'])->name('comment.delete');
+    Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comment.destroy');
 })->middleware(AdminRole::class);
 
 require __DIR__.'/auth.php';

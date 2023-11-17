@@ -18,3 +18,7 @@ a {
 a:hover {
     color: #0a58ca;
 }
+
+input:disabled {
+    background: #e9ecef;
+}
