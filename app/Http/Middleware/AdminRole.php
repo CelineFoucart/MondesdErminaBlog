@@ -16,12 +16,14 @@ class AdminRole
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->user() === null) {
-            return route('login');
+            return redirect(route('login'));
         }
         
         if ($request->user()->role !== 'admin') {
             abort(403, 'Access denied');
         }
+
+        
 
         return $next($request);
     }

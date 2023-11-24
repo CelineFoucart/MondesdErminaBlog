@@ -37,15 +37,14 @@ class BlogController extends Controller
     private function getBlogPostPaginated(SearchRequest $searchRequest, ?Category $category = null): LengthAwarePaginator
     {
         $categoryId = ($category !== null) ? $category->id : null;
+        $query = BlogPost::query();
 
-        $query = BlogPost::query()->with('categories', function($query)  use ($categoryId) {
-            if ($categoryId !== null) {
-                $query->where('category_id', $categoryId);
-            }
-        });
+        if ($categoryId !== null) {
+            $query->whereRelation('categories', 'id', '=', $categoryId)->get();
+        }
 
         if ($searchRequest->validated('title')) {
-            $query = $query->where('title', 'like', "%{$searchRequest->validated('title')}%");
+            $query = $query->andWhere('title', 'like', "%{$searchRequest->validated('title')}%");
         }
 
         if ($searchRequest->validated('perPage')) {

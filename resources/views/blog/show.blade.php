@@ -13,7 +13,7 @@
             </header>
 
             <div class="text-lg leading-8 pb-6">
-                {{ nl2br($blogPost->content) }}
+                {!! nl2br($blogPost->content) !!}
             </div>
 
             <div id="app" data-post="{{ $blogPost->id }}"></div>

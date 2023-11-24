@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,6 +37,13 @@ class BlogPost extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'content',
+        'description',
+        'title',
+        'slug',
+    ];
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -49,5 +57,19 @@ class BlogPost extends Model
     public function scopeRecent(Builder $builder): Builder
     {
         return $builder->orderBy('created_at', 'desc');
+    }
+
+    public static function boot() 
+    {
+        parent::boot();
+
+        static::creating(function($item) {
+            $item->slug = Str::slug($item->title);
+            $item->user_id = auth()->user()->id;
+        });
+
+        static::updating(function($item) {
+            $item->slug = Str::slug($item->title);
+        });
     }
 }

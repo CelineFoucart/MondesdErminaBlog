@@ -1,6 +1,9 @@
 <x-admin-layout>
     <x-slot name="pageTitle">Commentaires</x-slot>
-    <x-slot name="header">Liste des commentaires</x-slot>
+    <x-slot name="headerAdmin">Liste des commentaires</x-slot>
+    <x-slot name="header">
+        <x-breadcrumb :links="[['route' => null, 'title' => 'Commentaires'] ]"></x-breadcrumb>
+    </x-slot>
 
     <div class="border rounded p-4 bg-white">
         @if (session('success'))

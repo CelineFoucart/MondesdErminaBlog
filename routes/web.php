@@ -1,14 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use Illuminate\Http\Request;
+use App\Http\Middleware\AdminRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Middleware\AdminRole;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,12 +47,16 @@ Route::prefix('/api/blog')->group(function() {
 });
 
 Route::prefix('/admin')->name('admin.')->group(function() {
-    Route::get('', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware(AdminRole::class);
     Route::get('/comments', [AdminCommentController::class, 'index'])->name('comment.index');
     Route::get('/comments/{comment}', [AdminCommentController::class, 'edit'])->name('comment.edit');
     Route::put('/comments/{comment}', [AdminCommentController::class, 'update'])->name('comment.update');
     Route::get('/comments/{comment}/delete', [AdminCommentController::class, 'delete'])->name('comment.delete');
     Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comment.destroy');
-})->middleware(AdminRole::class);
+    Route::resource("post", BlogPostController::class);
+    Route::get('/post/{post}/delete', [BlogPostController::class, 'delete'])->name('post.delete');
+    Route::resource("category", CategoryController::class);
+    Route::get('/category/{category}/delete', [CategoryController::class, 'delete'])->name('category.delete');
+});
 
 require __DIR__.'/auth.php';

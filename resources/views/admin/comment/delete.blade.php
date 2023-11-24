@@ -1,6 +1,13 @@
 <x-admin-layout>
     <x-slot name="pageTitle">Supprimer un commentaire</x-slot>
-    <x-slot name="header">Supprimer un commentaire</x-slot>
+    <x-slot name="headerAdmin">Supprimer un commentaire</x-slot>
+    
+    <x-slot name="header">
+        <x-breadcrumb :links="[ 
+            ['route' => 'admin.comment.index', 'title' => 'Commentaires', 'params' => []],
+            ['route' => null, 'title' => 'Suppression'] 
+        ]"></x-breadcrumb>
+    </x-slot>
 
     <div class="border rounded p-4 bg-white">
         <h2 class="mb-2 font-bold text-xl border-b text-red-600 border-gray-300">Supprimer un commentaire</h2>

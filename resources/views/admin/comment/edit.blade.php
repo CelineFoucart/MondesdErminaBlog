@@ -1,6 +1,12 @@
 <x-admin-layout>
     <x-slot name="pageTitle">Editer un commentaire</x-slot>
-    <x-slot name="header">Editer un commentaire</x-slot>
+    <x-slot name="headerAdmin">Editer un commentaire</x-slot>
+    <x-slot name="header">
+        <x-breadcrumb :links="[ 
+            ['route' => 'admin.comment.index', 'title' => 'Commentaires', 'params' => []],
+            ['route' => null, 'title' => 'Modifier'] 
+        ]"></x-breadcrumb>
+    </x-slot>
 
     <div class="border rounded p-4 bg-white">
         <h2 class="mb-2 font-bold text-xl border-b border-gray-300">Modifier un commentaire</h2>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,8 +31,27 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'description',
+        'title',
+        'slug',
+    ];
+
     public function blogPosts(): HasMany
     {
         return $this->hasMany(BlogPost::class);
+    }
+
+    public static function boot() 
+    {
+        parent::boot();
+
+        static::creating(function($item) {
+            $item->slug = Str::slug($item->title);
+        });
+
+        static::updating(function($item) {
+            $item->slug = Str::slug($item->title);
+        });
     }
 }

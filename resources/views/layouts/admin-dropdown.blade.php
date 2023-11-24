@@ -24,6 +24,12 @@
                     <x-dropdown-link :href="route('admin.dashboard')">
                         Tableau de bord
                     </x-dropdown-link>
+                    <x-dropdown-link :href="route('admin.post.index')">
+                        Articles
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('admin.category.index')">
+                        Catégories
+                    </x-dropdown-link>
                     <x-dropdown-link :href="route('admin.comment.index')">
                         Commentaires
                     </x-dropdown-link>
